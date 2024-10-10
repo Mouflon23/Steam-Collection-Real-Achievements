@@ -80,7 +80,7 @@ while(True):
             print("Game added to Achievement.json")
 
             # Save the games with achievements to a JSON file immediately
-            output_file = 'Steam-Collection-Games-Success\JSON\Achievement.json'
+            output_file = r'JSON\Achievement.json'
             if os.path.exists(output_file):
                 # Load the existing data if the file already exists
                 with open(output_file, 'r') as file:
