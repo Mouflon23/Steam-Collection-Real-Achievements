@@ -22,7 +22,7 @@ def extract_links_to_json(input_html, output_json):
     print(f"Extracted text content has been saved to {output_json}.")
 
 # Process PL.html
-extract_links_to_json('SteamDB Get All games with Success\HTML\PL.html', 'SteamDB Get All games with Success\JSON\PL.json')
+extract_links_to_json('Steam-Collection-Games-Success\HTML\PL.html', 'Steam-Collection-Games-Success\JSON\PL.json')
 
 # Process SIL.html
-extract_links_to_json('SteamDB Get All games with Success\HTML\SIL.html', 'SteamDB Get All games with Success\JSON\SIL.json')
+extract_links_to_json('Steam-Collection-Games-Success\HTML\SIL.html', 'Steam-Collection-Games-Success\JSON\SIL.json')

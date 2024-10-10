@@ -20,7 +20,7 @@ collection_success = (1448, 699)
 text_region = (45, 230, 776, 700)
 time_sleep = 2
 
-with open(r'SteamDB Get All games with Success\JSON\AchievementFinal.json', 'r', encoding='utf-8') as achievement_file:
+with open(r'Steam-Collection-Games-Success\JSON\AchievementFinal.json', 'r', encoding='utf-8') as achievement_file:
     achievement = json.load(achievement_file)
 
 def format_seconds(seconds):
@@ -38,7 +38,7 @@ def get_text(text_region):
     # Take a screenshot of the specified text region
     screenshot = pyautogui.screenshot(region=text_region)
     # Define the path to save the screenshot
-    screenshot_path = r'SteamDB Get All games with Success'
+    screenshot_path = r'Steam-Collection-Games-Success'
 
     text_img = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
     text_gray = cv2.cvtColor(text_img, cv2.COLOR_BGR2GRAY)
@@ -85,7 +85,7 @@ for value in achievement:
     else:
         games_not_found = True
         not_found = value
-        with open(r'SteamDB Get All games with Success\JSON\NotFound.json', 'w') as not_found_file:
+        with open(r'Steam-Collection-Games-Success\JSON\NotFound.json', 'w') as not_found_file:
             json.dump(not_found, not_found_file, indent=4, ensure_ascii=False)
         print('Game not found. Game added to NotFound.json.')
         print('Next Game')

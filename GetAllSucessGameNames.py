@@ -8,7 +8,7 @@ import os
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def is_text_visible(target_text, region=None):
+def is_text_visible(region=None):
     # Take a screenshot
     screenshot = pyautogui.screenshot(region=region)
     
@@ -72,7 +72,7 @@ while(True):
 
     for j in range(total_games):
         print(f'Game Name: {game_names_list[j]}')
-        if is_text_visible(target_texts, region=check_region):
+        if is_text_visible(region=check_region):
             print("Success Detected!")
             game_name_a = game_names_list[j]
             # Add the game name to the list
@@ -80,7 +80,7 @@ while(True):
             print("Game added to Achievement.json")
 
             # Save the games with achievements to a JSON file immediately
-            output_file = 'SteamDB Get All games with Success\JSON\Achievement.json'
+            output_file = 'Steam-Collection-Games-Success\JSON\Achievement.json'
             if os.path.exists(output_file):
                 # Load the existing data if the file already exists
                 with open(output_file, 'r') as file:
