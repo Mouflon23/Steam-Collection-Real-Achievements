@@ -5,7 +5,6 @@
 <p align="center">
     <a href="https://github.comMouflon23/Steam-Collection-Games-Success/releases/latest"><img src="https://img.shields.io/github/release/Mouflon23/Steam-Collection-Games-Success.svg?maxAge=2592000" alt="GitHub release" /></a>
     <a href="https://https://github.com/Mouflon23/Steam-Collection-Games-Success/releases"><img src="https://img.shields.io/github/downloads/Mouflon23/Steam-Collection-Games-Success/total.svg?maxAge=2592000" alt="Github All Releases" /></a>
-    <a href="https://github.com/ambv/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
 </p>
 
 ---
