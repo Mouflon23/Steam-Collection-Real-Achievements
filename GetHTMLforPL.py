@@ -1,30 +1,36 @@
-import requests
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+import time
+import os
 
-# URL of the SteamDB page
+# Set the path to your WebDriver (Chrome in this example)
+webdriver_path = r'C:\Users\super\Documents\Dev\Steam-Collection-Games-Success\chromedriver-win64\chromedriver.exe'  # Update with your actual path
+
+# Create a Service object for ChromeDriver
+service = Service(webdriver_path)
+
+# Initialize the WebDriver (Chrome)
+driver = webdriver.Chrome(service=service)
+
+# Open the SteamDB URL
 url = 'https://steamdb.info/tag/1003823/'
+driver.get(url)
 
-# Set headers to mimic a browser request more completely
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-}
+# Optional: Wait for the page to load fully
+time.sleep(5)  # Adjust this time as necessary
 
-# Send a GET request with headers
-response = requests.get(url, headers=headers)
+# Get the page source (HTML)
+html_content = driver.page_source
 
-# Check if the request was successful
-if response.status_code == 200:
-    # Ensure the directory exists
-    import os
-    os.makedirs(r'Steam-Collection-Games-Success\HTML', exist_ok=True)
+# Ensure the directory exists
+os.makedirs(r'Steam-Collection-Games-Success\HTML', exist_ok=True)
 
-    # Save the HTML content to a file
-    with open(r'Steam-Collection-Games-Success\HTML\PL.html', 'w', encoding='utf-8') as file:
-        file.write(response.text)
-    print("HTML page saved successfully.")
-else:
-    print(f"Failed to retrieve the page. Status code: {response.status_code}")
+# Save the HTML content to a file
+with open(r'Steam-Collection-Games-Success\HTML\PL.html', 'w', encoding='utf-8') as file:
+    file.write(html_content)
+
+print("HTML page saved successfully.")
+
+# Close the browser
+driver.quit()
