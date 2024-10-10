@@ -10,3 +10,8 @@
 ---
 
 This program in python is used to add all games with success except the "Profil Limited" and "Steam is learning"  because they will not appear in your profil after completion.
+
+---
+
+This program run on windows 11, never tested on other os.
+You need to install Chrome to make the program work.
