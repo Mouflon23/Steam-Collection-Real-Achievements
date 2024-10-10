@@ -1,0 +1,18 @@
+1. Recuperer liste jeux sur le compte "Profil limité" et "Steam is learning"
+
+Python, Selenium
+PL :    https://steamdb.info/sales/?min_reviews=0&min_rating=0&min_discount=0&displayOnly=OwnedGames&category=776
+        https://steamdb.info/charts/?category=776
+        https://steamdb.info/tag/1003823/
+
+SIL :   https://steamdb.info/sales/?min_reviews=0&min_rating=0&min_discount=0&displayOnly=OwnedGames&category=777
+        https://steamdb.info/charts/?category=777
+
+2. Recuperer liste jeux avec Achievements via Launcher Steam
+3. Comparer les listes et enlever les PL et SIL de la list avec Achievements
+
+A - PL = A_PL
+A_PL - SIL = AClean
+
+4. Ajouter les jeux de la liste Achievements dans la collection "SUCCÉS"
+5. Ajouter les jeux de la liste PL et SIL dans la collection "PROFIL LIMITÉ"
