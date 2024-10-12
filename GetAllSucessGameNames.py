@@ -5,8 +5,12 @@ import cv2
 import numpy as np
 import time
 import os
+import pyperclip
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+store_page = (1055, 487)
+game_url = (90, 75)
+go_back = (23, 45)
 
 def is_text_visible(region=None):
     # Take a screenshot
@@ -74,7 +78,21 @@ while(True):
         print(f'Game Name: {game_names_list[j]}')
         if is_text_visible(region=check_region):
             print("Success Detected!")
-            game_name_a = game_names_list[j]
+            
+            # Click store page Point(x=1055, y=487)
+            pyautogui.click(store_page)
+            time.sleep(3)
+            # Click game_page
+            pyautogui.click(game_url)
+            game_page = pyperclip.paste()
+            # Click back to Library Point(x=90, y=75)
+            time.sleep(1)
+            pyautogui.click(go_back) 
+            pyautogui.press('tab')  
+            # Extract the game name
+            game_name_a = game_page.split('/')[-2].replace('_', ' ')  # Get the second last element from the split
+            print("Game : ", game_name_a)
+            # game_name_a = game_names_list[j]
             # Add the game name to the list
             games_with_achievements.append(game_name_a)
             print("Game added to Achievement.json")

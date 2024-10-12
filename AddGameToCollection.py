@@ -37,9 +37,6 @@ def format_seconds(seconds):
 def get_text(text_region):
     # Take a screenshot of the specified text region
     screenshot = pyautogui.screenshot(region=text_region)
-    # Define the path to save the screenshot
-    screenshot_path = r'Steam-Collection-Games-Success'
-
     text_img = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
     text_gray = cv2.cvtColor(text_img, cv2.COLOR_BGR2GRAY)
     # Apply thresholding

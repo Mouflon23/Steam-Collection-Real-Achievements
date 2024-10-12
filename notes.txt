@@ -16,3 +16,5 @@ A_PL - SIL = AClean
 
 4. Ajouter les jeux de la liste Achievements dans la collection "SUCCÉS"
 5. Ajouter les jeux de la liste PL et SIL dans la collection "PROFIL LIMITÉ"
+
+Get app info : https://store.steampowered.com/api/appdetails?appids=GAME_ID
