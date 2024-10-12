@@ -9,7 +9,7 @@ import time
 webdriver_path = r'chromedriver-win64\chromedriver.exe'
 
 # Set the path to the Chrome extension (.crx file)
-extension_path = r'SteamDB - Chrome Web Store 4.7.0.0.crx'
+extension_path = r'SteamDB-Extension.crx' 
 
 # Create a ChromeOptions object
 chrome_options = Options()
