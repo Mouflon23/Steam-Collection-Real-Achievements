@@ -27,18 +27,18 @@ driver = webdriver.Chrome(service=service, options=chrome_options)
 url = 'https://steamdb.info/sales/?min_reviews=0&min_rating=0&min_discount=0&displayOnly=OwnedGames&category=777'
 driver.get(url)
 
-# Optional: Wait for the page to load fully
-time.sleep(5)  # Adjust this time as necessary
+# # Optional: Wait for the page to load fully
+# time.sleep(5)  # Adjust this time as necessary
 
-# Locate the dropdown element using XPath
-dropdown = driver.find_element(By.XPATH, '//*[@id="dt-length-0"]')
+# # Locate the dropdown element using XPath
+# dropdown = driver.find_element(By.XPATH, '//*[@id="dt-length-0"]')
 
-# Create a Select object to interact with the dropdown
-select = Select(dropdown)
+# # Create a Select object to interact with the dropdown
+# select = Select(dropdown)
 
-# Select the option with the value "-1" (All (slow))
-select.select_by_value('-1')
-print("Option to show all game selected")
+# # Select the option with the value "-1" (All (slow))
+# select.select_by_value('-1')
+# print("Option to show all game selected")
 
 # # Wait for the page to reload with all the data (adjust time if necessary)
 # print('Waiting for the page to load all games')
