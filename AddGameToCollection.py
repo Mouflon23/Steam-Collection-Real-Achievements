@@ -82,7 +82,7 @@ for value in achievement:
     else:
         games_not_found = True
         not_found = value
-        with open(r'Steam-Collection-Games-Success\JSON\NotFound.json', 'w') as not_found_file:
+        with open(r'Steam-Collection-Games-Success\JSON\NotFound.json', 'w', encoding='utf-8') as not_found_file:
             json.dump(not_found, not_found_file, indent=4, ensure_ascii=False)
         print('Game not found. Game added to NotFound.json.')
         print('Next Game')

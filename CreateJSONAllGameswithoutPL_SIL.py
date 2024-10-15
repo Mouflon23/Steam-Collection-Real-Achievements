@@ -1,7 +1,7 @@
 import json
 
 def read_json_without_bom(file_path):
-    with open(file_path, 'r', encoding='utf-8-sig') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
 # Read the JSON files with UTF-8 encoding and BOM handling
@@ -17,7 +17,7 @@ pl_sil_normalized = [item.strip().lower() if isinstance(item, str) else item for
 
 # Step 3: Save merged result to PL_SIL.json with ensure_ascii=False to properly display characters
 with open(r'JSON\PL_SIL.json', 'w', encoding='utf-8') as pl_sil_file:
-    json.dump(pl_sil, pl_sil_file, indent=2, ensure_ascii=False)
+    json.dump(pl_sil, pl_sil_file, indent=4, ensure_ascii=False)
 
 # Normalize Achievement entries
 achievement_normalized = [item.strip().lower() if isinstance(item, str) else item for item in achievement]
@@ -30,6 +30,6 @@ achievement_final = [item for item in achievement_normalized if (
 
 # Step 5: Save the filtered achievements to AchievementFinal.json with ensure_ascii=False
 with open(r'JSON\AchievementFinal.json', 'w', encoding='utf-8') as achievement_final_file:
-    json.dump(achievement_final, achievement_final_file, indent=2, ensure_ascii=False)
+    json.dump(achievement_final, achievement_final_file, indent=4, ensure_ascii=False)
 
 print('Merging and filtering complete!')

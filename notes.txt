@@ -5,8 +5,12 @@ PL :    https://steamdb.info/sales/?min_reviews=0&min_rating=0&min_discount=0&di
         https://steamdb.info/charts/?category=776
         https://steamdb.info/tag/1003823/
 
+        Fonctionnalités de profil limitées
+
 SIL :   https://steamdb.info/sales/?min_reviews=0&min_rating=0&min_discount=0&displayOnly=OwnedGames&category=777
         https://steamdb.info/charts/?category=777
+
+        Steam essaye d'en apprendre plus sur ce jeu
 
 2. Recuperer liste jeux avec Achievements via Launcher Steam
 3. Comparer les listes et enlever les PL et SIL de la list avec Achievements
