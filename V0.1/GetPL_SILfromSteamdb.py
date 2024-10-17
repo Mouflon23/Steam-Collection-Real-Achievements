@@ -58,8 +58,8 @@ def fetch_steamdb_html(webdriver_path, url, output_html):
     
     time.sleep(5)  # Adjust this as necessary
     print("Wait for the page to load...")
-    element_xpath = '//*[@id="dt-length-0"]'
-    dropdown = driver.find_element(By.XPATH, element_xpath)
+
+    dropdown = driver.find_element(By.XPATH, '//*[@id="dt-length-0"]')
     select = Select(dropdown)
     select.select_by_value('-1')
     

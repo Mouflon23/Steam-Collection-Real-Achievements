@@ -1,7 +1,17 @@
-from steam_collection_games_success import extract_links_to_json
+from GetPL_SILfromSteamdb import run_extraction_process
+from AddGameToCollection import process_game
+import os
 
 def main():
-    print()
+
+    # Clearing the Screen
+    os.system('cls')
+    print("Starting process...")
+    # getting info from Steamdb
+    run_extraction_process()
+    # add game to collection
+    process_game()
+    
 
 if __name__ == "__main__":
     main()

@@ -1,13 +1,13 @@
 import json
 
-def read_json_without_bom(file_path):
+def read_json(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
 # Read the JSON files with UTF-8 encoding and BOM handling
-pl = read_json_without_bom(r'JSON\PL.json')
-sil = read_json_without_bom(r'JSON\SIL.json')
-achievement = read_json_without_bom(r'JSON\Achievement.json')
+pl = read_json(r'JSON\PL.json')
+sil = read_json(r'JSON\SIL.json')
+achievement = read_json(r'JSON\Achievement.json')
 
 # Step 2: Merge PL and SIL without duplicates
 pl_sil = list(set(pl + sil))

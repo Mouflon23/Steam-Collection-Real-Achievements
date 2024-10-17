@@ -11,9 +11,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -22,7 +19,6 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless browser if you don't need GUI
 # Set the path to your WebDriver (Chrome in this example)
 webdriver_path = r'chromedriver-win64\chromedriver.exe'
-# Suppress logs by redirecting them to NUL (Windows equivalent of /dev/null)
 service = Service(webdriver_path)
 
 
@@ -161,7 +157,6 @@ while(True):
                 with open(output_file, 'r', encoding='utf-8') as file:
                     data = json.load(file)
             else:
-
                 data = []
 
             # Append new games to the existing data
