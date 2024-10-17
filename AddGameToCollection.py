@@ -41,12 +41,12 @@ def get_game_url(store_page, game_url, go_back):
     have_page = False
     # Click store page
     pyautogui.click(store_page)
-    time.sleep(2)
-    # Click game_page
-    pyautogui.click(game_url)
-    game_page = pyperclip.paste()
     
     while True:
+        time.sleep(2)
+        # Click game_page
+        pyautogui.click(game_url)
+        game_page = pyperclip.paste()
         # Check if the game_page contains 'https://store.steampowered.com/?snr='
         if 'https://store.steampowered.com/?snr=' not in game_page:
             if game_page != "https://store.steampowered.com/":
