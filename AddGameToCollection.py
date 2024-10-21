@@ -15,7 +15,12 @@ def read_json(file_path):
 
     with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
+    
+def write_json(file_path, data):
+    with open(file_path, 'w', encoding='utf-8') as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
+    
 def get_game_name(game_id):
 
     # Construct the URL using the provided game ID
@@ -37,7 +42,7 @@ def get_game_name(game_id):
     else:
         return f"Failed to retrieve data. Status code: {response.status_code}"
 
-def get_game_url(store_page, game_url, go_back):
+def get_game_url(store_page, game_url, go_back, game_list):
     have_page = False
     # Click store page
     pyautogui.click(store_page)
@@ -58,6 +63,9 @@ def get_game_url(store_page, game_url, go_back):
                 # Extract the game name
                 game_id = game_page.split('/')[-3].replace('_', ' ')  # Get appID
                 game_name = get_game_name(game_id)
+                game_list.append(game_name)
+                game_list_path = r'JSON\gamesList.json'
+                write_json(game_list_path, game_list)
                 break
             else:
                 game_id = None
@@ -136,15 +144,13 @@ def check_steam_page(game_id, current_game, error_list):
     try:
         # Locate the element by class name using By.CLASS_NAME
         category_block = driver.find_element(By.CLASS_NAME, "game_area_features_list_ctn")
-        
         info_game = category_block.text  # Extract the text from the first div
     except Exception as e:
         info_game = "Error"
         game_error = current_game
         error_list.append(game_error)
-        # Step 5: Save the filtered achievements to AchievementFinal.json with ensure_ascii=False
-        with open(r'JSON\Error.json', 'w', encoding='utf-8') as error_file:
-            json.dump(game_error, error_file, indent=4, ensure_ascii=False)
+        error_file_path = r'JSON\Error.json'
+        write_json(error_file_path, error_list)
     driver.quit()
     return info_game
 
@@ -180,6 +186,8 @@ def process_game():
     # Initiate game number
     game_number = 1
     error_list = []
+    game_list = []
+    games_added = []
     
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -187,7 +195,7 @@ def process_game():
 
     while True:
 
-        game_id, current_game, have_page = get_game_url(store_page, game_url, go_back)
+        game_id, current_game, have_page = get_game_url(store_page, game_url, go_back, game_list)
         print(f"Game {game_number}: {current_game}")
 
         if have_page == True:
@@ -201,6 +209,9 @@ def process_game():
                         if not info_page == "Error":
                             print("Game is not PL or SIL.")
                             add_game_to_collection()
+                            games_added.append(current_game)
+                            added_game_list_path = r'JSON\gamesAdded.json'
+                            write_json(added_game_list_path, games_added)
                         else:
                             print("Game page error. Check Error.json")
                     else:
@@ -210,6 +221,7 @@ def process_game():
             else:
                 print("No success...")
             if last_game_name == current_game:
+                print("End of library. Stopping process..")
                 break
         
         game_number = scroll_library(game_number, store_page, go_back)
