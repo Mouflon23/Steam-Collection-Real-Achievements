@@ -111,7 +111,7 @@ def add_game_to_collection():
 
     game_settings = (1789, 431)
     add_to = (1705, 497)
-    collection_success = (1448, 699)
+    collection_success = (1449, 767)
 
     # add game to collection
     pyautogui.click(game_settings)
