@@ -107,18 +107,17 @@ def check_success(target_texts, region=None):
     # Check if any of the target variations are in the extracted text
     return any(target_text.lower() in extracted_text for target_text in target_texts)
 
-def add_game_to_collection():
+def add_game_to_collection(collection):
 
     game_settings = (1789, 431)
     add_to = (1705, 497)
-    collection_success = (1449, 767)
 
     # add game to collection
     pyautogui.click(game_settings)
     time.sleep(1)
     pyautogui.click(add_to)
     time.sleep(1)
-    pyautogui.click(collection_success)
+    pyautogui.click(collection)
     time.sleep(1)
     pyautogui.click(game_settings)
     print("Game added to collection")
@@ -154,14 +153,10 @@ def check_steam_page(game_id, current_game, error_list):
     driver.quit()
     return info_game
 
-def scroll_library(game_number, store_page, go_back):
+def scroll_library(game_number, go_back):
     game_number +=1
-    # Click store page
-    pyautogui.click(store_page)
-    time.sleep(2)
     # Click back to Library
     pyautogui.click(go_back)
-    pyautogui.press('tab')
     pyautogui.press('down')
     print()
     print(f"> NEXT GAME.")
@@ -176,6 +171,9 @@ def process_game():
     store_page = (1053, 489)
     game_url = (132, 78)
     go_back = (21, 46)
+    collection_success = (1449, 767)
+    collectio_PL_SIL = (1496, 730)
+    collection_no_success = (1461, 702)
     
     # Define the region for checking "SUCCES" (x, y, width, height)
     check_region = (1580, 530, 315, 430)  # Define the region for checking "SUCCES"
@@ -208,23 +206,27 @@ def process_game():
                     if not ("Steam essaye d'en apprendre plus sur ce jeu" in info_page or "Fonctionnalités de profil limitées" in info_page):
                         if not info_page == "Error":
                             print("Game is not PL or SIL.")
-                            add_game_to_collection()
+                            add_game_to_collection(collection_success)
                             games_added.append(current_game)
                             added_game_list_path = r'JSON\gamesAdded.json'
                             write_json(added_game_list_path, games_added)
                         else:
                             print("Game page error. Check Error.json")
                     else:
-                        print("Game with PL or SIL from Steam page. Not added.")
+                        print("Game with PL or SIL from Steam page.")
+                        add_game_to_collection(collectio_PL_SIL)
                 else:
-                    print("Game in JSON list. Not added.")
+                    print("Game in JSON list.")
+                    add_game_to_collection(collectio_PL_SIL)
             else:
                 print("No success...")
+                add_game_to_collection(collection_no_success)
+                
             if last_game_name == current_game:
                 print("End of library. Stopping process..")
                 break
         
-        game_number = scroll_library(game_number, store_page, go_back)
+        game_number = scroll_library(game_number, go_back)
 
 
 # If the script is run directly, run the main process
