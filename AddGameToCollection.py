@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 import pyautogui
+# Désactiver le mécanisme de sécurité de PyAutoGUI
+pyautogui.FAILSAFE = False
+
 import json
 import pytesseract
 import requests
@@ -83,8 +86,9 @@ def get_game_url(store_page, game_url, go_back, game_list):
 def setup_library(last_game_name):
     
     print(f'Last game : {last_game_name}')
-    print("Go to the top of your games library")
-    input("Press Enter when previous task is done...")
+    print("Go to the top of your games library and click the first game.")
+    print("Click on store page then go back to library.")
+    input("Then press Enter to continue.")
     print("Click the first game in 3 seconds")
     print()
     time.sleep(3)
@@ -104,6 +108,7 @@ def check_success(target_texts, region=None):
     
     # Use pytesseract to extract text
     extracted_text = pytesseract.image_to_string(gray_img)
+    # print(extracted_text)
 
     # Check if any of the target variations are in the extracted text
     return any(target_text.lower() in extracted_text for target_text in target_texts)
@@ -171,7 +176,7 @@ def scroll_library(game_number):
 def process_game():
 
     # Define coordinate of buttons on Steam
-    store_page = (1053, 489)
+    store_page = (382, 482)
     game_url = (132, 78)
     go_back = (21, 46)
     collection_success = (1449, 767)
@@ -180,7 +185,7 @@ def process_game():
     collection_no_info = (1548, 531)
     
     # Define the region for checking "SUCCES" (x, y, width, height)
-    check_region = (1580, 530, 315, 430)  # Define the region for checking "SUCCES"
+    check_region = (1370, 530, 315, 430)  # Define the region for checking "SUCCES"
 
     # Define the variations of "SUCCES" to check
     target_texts = ["SUCCES", "succés", "succes"]

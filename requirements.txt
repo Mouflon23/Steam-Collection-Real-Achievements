@@ -1,0 +1,8 @@
+steamapi
+requests
+pandas
+numpy
+beautifulsoup4
+lxml
+flask
+sqlalchemy
