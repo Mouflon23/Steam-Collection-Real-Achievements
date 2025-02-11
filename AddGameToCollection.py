@@ -7,7 +7,6 @@ import requests
 import pyperclip
 import time
 from useSelenium import *
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -61,7 +60,7 @@ def get_game_url(store_page, game_url, go_back, game_list):
                 pyautogui.click(go_back)
                 pyautogui.press('tab')
                 # Extract the game name
-                game_id = game_page.split('/')[-3].replace('_', ' ')  # Get appID
+                game_id = game_page.split('/')[4]  # Get appID
                 game_name = get_game_name(game_id)
                 game_list.append(game_name)
                 game_list_path = r'JSON\gamesList.json'
@@ -72,6 +71,8 @@ def get_game_url(store_page, game_url, go_back, game_list):
                 game_name = None
                 pyautogui.click(go_back)
                 pyautogui.press('tab')
+                # pyautogui.click(75, 453)
+                # pyautogui.press('down')
                 print("Game page does not exist!")
                 break
 
@@ -107,20 +108,21 @@ def check_success(target_texts, region=None):
     # Check if any of the target variations are in the extracted text
     return any(target_text.lower() in extracted_text for target_text in target_texts)
 
-def add_game_to_collection(collection):
+def add_game_to_collection(collection, name_collection):
 
     game_settings = (1789, 431)
     add_to = (1705, 497)
+    click_away = (1475, 418)
 
     # add game to collection
     pyautogui.click(game_settings)
-    time.sleep(1)
+    time.sleep(0.5)
     pyautogui.click(add_to)
-    time.sleep(1)
+    time.sleep(0.5)
     pyautogui.click(collection)
-    time.sleep(1)
-    pyautogui.click(game_settings)
-    print("Game added to collection")
+    time.sleep(0.5)
+    pyautogui.click(click_away)
+    print("Game added to collection", name_collection)
 
 def compare_game_with_json(game_name):
 
@@ -139,7 +141,6 @@ def check_steam_page(game_id, current_game, error_list):
     driver = create_webdriver()
     url = f'https://store.steampowered.com/app/{game_id}'
     driver.get(url)
-
     try:
         # Locate the element by class name using By.CLASS_NAME
         category_block = driver.find_element(By.CLASS_NAME, "game_area_features_list_ctn")
@@ -153,14 +154,16 @@ def check_steam_page(game_id, current_game, error_list):
     driver.quit()
     return info_game
 
-def scroll_library(game_number, go_back):
+def scroll_library(game_number):
     game_number +=1
-    # Click back to Library
-    pyautogui.click(go_back)
-    pyautogui.press('down')
+    time.sleep(3)
+    first_game_collection = (180, 478)
+    # Click next game
+    pyautogui.click(first_game_collection)
     print()
     print(f"> NEXT GAME.")
-    time.sleep(3)
+    print()
+    time.sleep(1)
 
     return game_number
 
@@ -172,8 +175,9 @@ def process_game():
     game_url = (132, 78)
     go_back = (21, 46)
     collection_success = (1449, 767)
-    collectio_PL_SIL = (1496, 730)
+    collection_PL_SIL = (1496, 730)
     collection_no_success = (1461, 702)
+    collection_no_info = (1548, 531)
     
     # Define the region for checking "SUCCES" (x, y, width, height)
     check_region = (1580, 530, 315, 430)  # Define the region for checking "SUCCES"
@@ -206,27 +210,30 @@ def process_game():
                     if not ("Steam essaye d'en apprendre plus sur ce jeu" in info_page or "Fonctionnalités de profil limitées" in info_page):
                         if not info_page == "Error":
                             print("Game is not PL or SIL.")
-                            add_game_to_collection(collection_success)
+                            add_game_to_collection(collection_success, "success")
                             games_added.append(current_game)
                             added_game_list_path = r'JSON\gamesAdded.json'
                             write_json(added_game_list_path, games_added)
                         else:
                             print("Game page error. Check Error.json")
+                            add_game_to_collection(collection_no_info, "no info")
                     else:
                         print("Game with PL or SIL from Steam page.")
-                        add_game_to_collection(collectio_PL_SIL)
+                        add_game_to_collection(collection_PL_SIL, "PL/SIL")
                 else:
                     print("Game in JSON list.")
-                    add_game_to_collection(collectio_PL_SIL)
+                    add_game_to_collection(collection_PL_SIL, "PL/SIL")
             else:
                 print("No success...")
-                add_game_to_collection(collection_no_success)
+                add_game_to_collection(collection_no_success, "no success")
                 
             if last_game_name == current_game:
                 print("End of library. Stopping process..")
                 break
+        else:
+            add_game_to_collection(collection_no_info, "no info")
         
-        game_number = scroll_library(game_number, go_back)
+        game_number = scroll_library(game_number)
 
 
 # If the script is run directly, run the main process

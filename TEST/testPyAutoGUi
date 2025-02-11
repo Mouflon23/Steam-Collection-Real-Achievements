@@ -1,0 +1,7 @@
+import pyautogui
+import time
+time.sleep(3)
+# Go back to Library
+pyautogui.click(223, 454)
+time.sleep(2)
+pyautogui.press('down')
