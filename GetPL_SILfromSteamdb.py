@@ -1,7 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import json
 from bs4 import BeautifulSoup
@@ -29,7 +32,6 @@ def delete_all_html_contents(directory):
     except Exception as e:
         print(f"Error accessing directory {directory}. Reason: {e}")
 
-
 def extract_links_to_json(input_html, output_json):
     """
     Function to extract all text links from <a> tags with a specific class and target, and save them to a JSON file.
@@ -47,18 +49,22 @@ def extract_links_to_json(input_html, output_json):
 
     print(f"Extracted text content has been saved to {output_json}.")
 
-def fetch_steamdb_html(webdriver_path, url, output_html):
+def fetch_steamdb_html(url, output_html):
     """
     Function to automate the browser, select "All(slow)" in dropdown, and save the resulting HTML to a file.
     """
-    service = Service(webdriver_path)
-    driver = webdriver.Chrome(service=service)
+    chrome_options = Options()
+    # Comment or remove the following line to disable headless mode
+    # chrome_options.add_argument("--headless")  # Run headless browser if you don't need GUI
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     
     driver.get(url)
     
     time.sleep(5)  # Adjust this as necessary
     print("Wait for the page to load...")
     element_xpath = '//*[@id="dt-length-0"]'
+    # Wait for the dropdown element to be present
+    WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, element_xpath)))
     dropdown = driver.find_element(By.XPATH, element_xpath)
     select = Select(dropdown)
     select.select_by_value('-1')
@@ -75,14 +81,10 @@ def fetch_steamdb_html(webdriver_path, url, output_html):
     
     driver.quit()
 
-
 def run_extraction_process():
     """
     Main function to run the entire process of fetching HTML and extracting links to JSON files.
     """
-    # Path to your Chrome WebDriver
-    webdriver_path = r'chromedriver-win64\chromedriver.exe'
-
     # URLs and file paths
     steamdb_url = 'https://steamdb.info/tag/1003823/'
     pl_html_path = r'HTML\PL.html'
@@ -91,7 +93,7 @@ def run_extraction_process():
     sil_json_output = r'JSON\SIL.json'
 
     # Fetch and save HTML for the first URL
-    fetch_steamdb_html(webdriver_path, steamdb_url, pl_html_path)
+    fetch_steamdb_html(steamdb_url, pl_html_path)
 
     # Prompt user to manually download SIL.html after doing tasks in the browser
     print("Go to your browser.")
