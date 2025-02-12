@@ -59,7 +59,7 @@ def get_game_url(store_page, game_url, go_back, game_list):
             if game_page != "https://store.steampowered.com/":
                 have_page = True
                 # Click back to Library
-                time.sleep(1)
+                time.sleep(2)
                 pyautogui.click(go_back)
                 pyautogui.press('tab')
                 # Extract the game name
@@ -72,7 +72,9 @@ def get_game_url(store_page, game_url, go_back, game_list):
             else:
                 game_id = None
                 game_name = None
+                time.sleep(2)
                 pyautogui.click(go_back)
+                time.sleep(2)
                 pyautogui.press('tab')
                 # pyautogui.click(75, 453)
                 # pyautogui.press('down')
@@ -83,13 +85,57 @@ def get_game_url(store_page, game_url, go_back, game_list):
 
 
     
-def setup_library(last_game_name):
+def setup_library(last_game, first_game, store_page, go_back, game_url):
     
-    print(f'Last game : {last_game_name}')
-    print("Go to the top of your games library and click the first game.")
-    print("Click on store page then go back to library.")
+    print("Open Steam.")
+    print("Scroll library to the end.")
     input("Then press Enter to continue.")
-    print("Click the first game in 3 seconds")
+    # Click last game
+    pyautogui.click(last_game)
+    time.sleep(0.5)
+    pyautogui.click(store_page)
+    
+    while True:
+        time.sleep(2)
+        # Click game_page
+        pyautogui.click(game_url)
+        game_page = pyperclip.paste()
+        # Check if the game_page contains 'https://store.steampowered.com/?snr='
+        if 'https://store.steampowered.com/?snr=' not in game_page:
+            if game_page != "https://store.steampowered.com/":
+                # Click back to Library
+                time.sleep(1)
+                pyautogui.click(go_back)
+                pyautogui.press('tab')
+                # Extract the game name
+                game_id = game_page.split('/')[4]  # Get appID
+                last_game_name = get_game_name(game_id)
+                break
+            else:
+                game_id = None
+                last_game_name = None
+                pyautogui.click(go_back)
+                pyautogui.press('tab')
+                # pyautogui.click(75, 453)
+                # pyautogui.press('down')
+                print("Game page does not exist!")
+                break
+    print(f'Last game : {last_game_name}')
+    print("Scroll to the top of library.")
+    print("Open Collection NO CATEGORY.")
+    input("Then press Enter to continue.")
+    # Click first game
+    pyautogui.click(first_game)
+    time.sleep(0.5)
+    # Click store page
+    pyautogui.click(store_page)
+    time.sleep(0.5)
+    # click go back
+    pyautogui.click(go_back)
+    time.sleep(0.5)
+    # Click first game
+    pyautogui.click(first_game)
+    time.sleep(0.5)
     print()
     time.sleep(3)
 
@@ -183,6 +229,11 @@ def process_game():
     collection_PL_SIL = (1496, 730)
     collection_no_success = (1461, 702)
     collection_no_info = (1548, 531)
+    first_game_collection = (53, 479)
+    last_game = (65, 962)
+    previous_game = None
+    same_game_count = 0
+    
     
     # Define the region for checking "SUCCES" (x, y, width, height)
     check_region = (1370, 530, 315, 430)  # Define the region for checking "SUCCES"
@@ -198,48 +249,54 @@ def process_game():
     
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-    last_game_name = setup_library(last_game_name="龙骑战歌")
+    last_game_name = setup_library(last_game, first_game_collection, store_page, go_back, game_url)
 
     while True:
 
         game_id, current_game, have_page = get_game_url(store_page, game_url, go_back, game_list)
         print(f"Game {game_number}: {current_game}")
-
-        if have_page == True:
-            if check_success(target_texts, region=check_region):
-                print("Success Detected!")
-                is_find = compare_game_with_json(current_game)
-                if is_find == False:
-                    print("Game not in JSON LIST.")
-                    info_page = check_steam_page(game_id, current_game, error_list)
-                    if not ("Steam essaye d'en apprendre plus sur ce jeu" in info_page or "Fonctionnalités de profil limitées" in info_page):
-                        if not info_page == "Error":
-                            print("Game is not PL or SIL.")
-                            add_game_to_collection(collection_success, "success")
-                            games_added.append(current_game)
-                            added_game_list_path = r'JSON\gamesAdded.json'
-                            write_json(added_game_list_path, games_added)
+        
+        if same_game_count > 1:
+            print("Error Stopping the process.")
+            break
+        if previous_game == current_game:
+            same_game_count += 1
+        else:
+            if have_page == True:
+                if check_success(target_texts, region=check_region):
+                    print("Success Detected!")
+                    is_find = compare_game_with_json(current_game)
+                    if is_find == False:
+                        print("Game not in JSON LIST.")
+                        info_page = check_steam_page(game_id, current_game, error_list)
+                        if not ("Steam essaye d'en apprendre plus sur ce jeu" in info_page or "Fonctionnalités de profil limitées" in info_page):
+                            if not info_page == "Error":
+                                print("Game is not PL or SIL.")
+                                add_game_to_collection(collection_success, "success")
+                                games_added.append(current_game)
+                                added_game_list_path = r'JSON\gamesAdded.json'
+                                write_json(added_game_list_path, games_added)
+                            else:
+                                print("Game page error. Check Error.json")
+                                add_game_to_collection(collection_no_info, "no info")
                         else:
-                            print("Game page error. Check Error.json")
-                            add_game_to_collection(collection_no_info, "no info")
+                            print("Game with PL or SIL from Steam page.")
+                            add_game_to_collection(collection_PL_SIL, "PL/SIL")
                     else:
-                        print("Game with PL or SIL from Steam page.")
+                        print("Game in JSON list.")
                         add_game_to_collection(collection_PL_SIL, "PL/SIL")
                 else:
-                    print("Game in JSON list.")
-                    add_game_to_collection(collection_PL_SIL, "PL/SIL")
+                    print("No success...")
+                    add_game_to_collection(collection_no_success, "no success")
+                    
+                if last_game_name == current_game:
+                    print("End of library. Stopping process..")
+                    break
             else:
-                print("No success...")
-                add_game_to_collection(collection_no_success, "no success")
-                
-            if last_game_name == current_game:
-                print("End of library. Stopping process..")
-                break
-        else:
-            add_game_to_collection(collection_no_info, "no info")
-        
-        game_number = scroll_library(game_number)
-
+                add_game_to_collection(collection_no_info, "no info")
+            
+            game_number = scroll_library(game_number)
+            previous_game = current_game
 
 # If the script is run directly, run the main process
 if __name__ == "__main__":
