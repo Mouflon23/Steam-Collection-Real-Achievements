@@ -85,7 +85,7 @@ def get_game_url(store_page, game_url, go_back, game_list):
 
 
     
-def setup_library(last_game, first_game, store_page, go_back, game_url):
+def setup_library(last_game, first_game, store_page, go_back, game_url, scroll_library_top):
     
     print("Open Steam.")
     print("Scroll library to the end.")
@@ -121,9 +121,8 @@ def setup_library(last_game, first_game, store_page, go_back, game_url):
                 print("Game page does not exist!")
                 break
     print(f'Last game : {last_game_name}')
-    print("Scroll to the top of library.")
-    print("Open Collection NO CATEGORY.")
-    input("Then press Enter to continue.")
+    pyautogui.click(scroll_library_top)
+    time.sleep(0.5)
     # Click first game
     pyautogui.click(first_game)
     time.sleep(0.5)
@@ -231,8 +230,10 @@ def process_game():
     collection_no_info = (1548, 531)
     first_game_collection = (53, 479)
     last_game = (65, 962)
+    scroll_library_top = (195, 147)
     previous_game = None
     same_game_count = 0
+    count_before_break = 50
     
     
     # Define the region for checking "SUCCES" (x, y, width, height)
@@ -249,19 +250,19 @@ def process_game():
     
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-    last_game_name = setup_library(last_game, first_game_collection, store_page, go_back, game_url)
+    last_game_name = setup_library(last_game, first_game_collection, store_page, go_back, game_url, scroll_library_top)
 
     while True:
-
+        
         game_id, current_game, have_page = get_game_url(store_page, game_url, go_back, game_list)
         print(f"Game {game_number}: {current_game}")
         
-        if same_game_count > 1:
+        if same_game_count > 3 and previous_game is not None:
             print("Error Stopping the process.")
             break
-        if previous_game == current_game:
-            same_game_count += 1
         else:
+            if count_before_break == game_number:
+                time.sleep(10)
             if have_page == True:
                 if check_success(target_texts, region=check_region):
                     print("Success Detected!")
@@ -294,7 +295,8 @@ def process_game():
                     break
             else:
                 add_game_to_collection(collection_no_info, "no info")
-            
+            if previous_game == current_game:
+                same_game_count += 1
             game_number = scroll_library(game_number)
             previous_game = current_game
 
