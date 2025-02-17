@@ -257,7 +257,9 @@ def process_game():
         game_id, current_game, have_page = get_game_url(store_page, game_url, go_back, game_list)
         print(f"Game {game_number}: {current_game}")
         
-        if same_game_count > 3 and previous_game is not None:
+        if current_game is not previous_game:
+            same_game_count = 0
+        if same_game_count > 3 and previous_game is not None or previous_game is "Failed to retrieve data. Status code: 400":
             print("Error Stopping the process.")
             break
         else:
