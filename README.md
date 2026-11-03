@@ -17,7 +17,7 @@ Some games have achievements that will not appear on your profile after completi
 
 **Without `--apply`, this program does not change anything in Steam.** Results stay in a cache for 30 days, so a second run only looks up what is new, and a stopped run continues where it was.
 
-To apply, Steam is restarted with its debug port (`-cef-enable-debugging`), then restarted normally: this port gives access to the client while it is open. The collections are backed up in `output` first. Games of the family library and removed licenses are skipped, and left out of the next reports.
+To apply, Steam is restarted with its debug port (`-cef-enable-debugging`), then restarted normally: this port gives access to the client while it is open. The collections are backed up in `output` first. Demos and family library games are sorted too. Apps that are not in the library, like removed licenses, are skipped and left out of the next reports.
 
 | Game | Collection |
 | --- | --- |
@@ -65,5 +65,5 @@ venv\Scripts\python -m unittest discover -s tests
 
 ## Limits
 
-- The local client cache can list games you do not own. They are in their own section of the report, and `--apply` checks them in the client.
+- The local client cache also lists apps outside your library. They are in their own section of the report, and `--apply` checks them in the client.
 - Steam client internals can change with an update. If `--apply` fails, nothing is lost: games are added before being removed, and the backup is in `output`.

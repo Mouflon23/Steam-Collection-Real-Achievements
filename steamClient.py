@@ -24,12 +24,13 @@ APPLY_SCRIPT = '''(async () => {
     if (found.length !== 1) return { error: `${found.length} collections named ${name}` };
     collections[name] = found[0];
   }
-  const owned = collectionStore.myGamesCollection.apps;
-  const toAdd = {}, toRemove = {}, notOwned = [];
+  // The whole library, family games included
+  const library = collectionStore.allAppsCollection.apps;
+  const toAdd = {}, toRemove = {}, notInLibrary = [];
   for (const move of moves) {
     const app = appStore.GetAppOverviewByAppID(move.appid);
-    if (!app || (move.new_to_collections && !owned.has(move.appid))) {
-      notOwned.push(move.appid);
+    if (!app || !library.has(move.appid)) {
+      notInLibrary.push(move.appid);
       continue;
     }
     (toAdd[move.to] = toAdd[move.to] || []).push(app);
@@ -46,7 +47,7 @@ APPLY_SCRIPT = '''(async () => {
     await collections[name].Save();
     removed[name] = apps.length;
   }
-  return { added, removed, notOwned };
+  return { added, removed, notInLibrary };
 })()'''
 
 READY_SCRIPT = "typeof collectionStore !== 'undefined' && collectionStore.myGamesCollection.apps.size > 0"
