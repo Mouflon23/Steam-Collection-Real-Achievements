@@ -85,15 +85,15 @@ def apply_to_steam(steam_path, user_id, cache, moves):
     if 'error' in result:
         print(f'Nothing applied: {result["error"]}')
         return 1
-    # Family games and removed licenses stay out of the next reports
-    for app_id in result['notOwned']:
-        cache[app_id]['owned'] = False
+    # Removed licenses and apps only seen in the store stay out of the next reports
+    for app_id in result['notInLibrary']:
+        cache[app_id]['in_library'] = False
     classify.save_cache(CACHE_PATH, cache)
     for name, count in result['added'].items():
         print(f'+{count} in {name}')
     for name, count in result['removed'].items():
         print(f'-{count} from {name}')
-    print(f'{len(result["notOwned"])} games skipped because they are not in your own library.')
+    print(f'{len(result["notInLibrary"])} apps skipped because they are not in your Steam library.')
     return 0
 
 def main():

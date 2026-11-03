@@ -10,7 +10,9 @@ UNKNOWN = 'AUCUN INFO DISPO'
 SORTED_COLLECTIONS = (ACHIEVEMENTS, LIMITED, NO_ACHIEVEMENTS, UNKNOWN, 'NO SUCCESS OR PL/SIL')
 # Games placed here by hand are never moved
 PROTECTED_COLLECTIONS = ('DONE', 'SUCCÉS NON FAISABLE / dropped', 'Masqués')
-GAME_TYPE = 0
+# Store types sorted even outside the collections: games, demos, playtests, and apps without store data.
+# The Steam client drops the ones that are not in the library when applying.
+LIBRARY_TYPES = (0, 1, 12, None)
 CACHE_MAX_AGE_DAYS = 30
 
 def load_cache(file_path):
@@ -44,11 +46,11 @@ def classify(entry):
 
 def select_apps(cache, collections, app_ids):
     """
-    Keep the apps to sort: everything already in a collection, and the others if they are games.
+    Keep the apps to sort: everything already in a collection, and the others if they can be played.
     """
     in_collections = set().union(*collections.values())
     return [app_id for app_id in app_ids
-            if app_id in in_collections or cache.get(app_id, {}).get('type') == GAME_TYPE]
+            if app_id in in_collections or cache.get(app_id, {}).get('type') in LIBRARY_TYPES]
 
 def plan_moves(cache, collections, app_ids):
     """
@@ -59,7 +61,7 @@ def plan_moves(cache, collections, app_ids):
 
     moves = []
     for app_id in app_ids:
-        if app_id in protected or cache.get(app_id, {}).get('owned') is False:
+        if app_id in protected or cache.get(app_id, {}).get('in_library') is False:
             continue
         current = [name for name in SORTED_COLLECTIONS if app_id in collections.get(name, set())]
         entry = cache.get(app_id)
@@ -98,7 +100,8 @@ def format_report(moves, counts):
     for (origin, target), group in sorted(groups.items(), key=lambda item: -len(item[1])):
         lines += [f'### {origin} → {target} ({len(group)})', '']
         if origin == 'hors collections':
-            lines += ['Le cache local de Steam contient aussi des jeux non possédés : à vérifier avant ajout.', '']
+            lines += ['Le cache local de Steam contient aussi des applications hors bibliothèque : '
+                      '--apply ne garde que celles de ta bibliothèque, jeux de la famille compris.', '']
         lines += [f'- [{move["name"]}](https://store.steampowered.com/app/{move["appid"]}/)'
                   for move in sorted(group, key=lambda move: move['name'].lower())]
         lines.append('')

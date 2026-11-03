@@ -56,8 +56,8 @@ class PlanMovesTest(unittest.TestCase):
         cache = {1: {'name': 'A', 'achievements': False}}
         self.assertEqual(self.plan(cache, {ACHIEVEMENTS: {1}, 'DONE': {1}}, [1]), {})
 
-    def test_game_not_owned_never_moves(self):
-        cache = {1: {'name': 'A', 'achievements': False, 'owned': False}}
+    def test_app_outside_library_never_moves(self):
+        cache = {1: {'name': 'A', 'achievements': False, 'in_library': False}}
         self.assertEqual(self.plan(cache, {}, [1]), {})
 
     def test_collection_names_used_by_moves(self):
@@ -68,9 +68,9 @@ class PlanMovesTest(unittest.TestCase):
         cache = {1: {'name': 'A', 'achievements': False}}
         self.assertTrue(self.plan(cache, {ACHIEVEMENTS: {2}}, [1])[1]['new_to_collections'])
 
-    def test_select_apps_keeps_games_and_collections(self):
-        cache = {1: {'type': 0}, 2: {'type': 4}, 3: {'type': 4}}
-        self.assertEqual(classify.select_apps(cache, {'VR': {3}}, [1, 2, 3, 4]), [1, 3])
+    def test_select_apps_keeps_playable_apps_and_collections(self):
+        cache = {1: {'type': 0}, 2: {'type': 4}, 3: {'type': 4}, 4: {'type': 1}, 5: {'type': None}, 6: {'type': 11}}
+        self.assertEqual(classify.select_apps(cache, {'VR': {3}}, [1, 2, 3, 4, 5, 6]), [1, 3, 4, 5])
 
 class FakeResponse:
 
